@@ -28,7 +28,7 @@ export default async function logAndErrorHandler(
     );
   } catch (error) {
     logger.error(error.message);
-    response.status = error.status ?? Status.InternalServerError;
+    response.status = error.status || error.code || Status.InternalServerError;
 
     const endTime = Date.now();
     const time = endTime - startTime;
