@@ -1,0 +1,16 @@
+{
+  "imports": {
+    "@deps": "./deps.ts",
+    "@types": "./src/types.ts",
+    "@app": "./src/app.ts",
+    "@routes/": "./src/routes/",
+    "@middlewares/": "./src/middlewares/",
+    "@controllers/": "./src/controllers/",
+    "@services/": "./src/services/",
+    "@models/": "./src/models/",
+    "@zod/": "./src/zod/",
+    "@utils/": "./src/utils/",
+    "@testDeps": "./tests/deps.ts",
+    "@dotenv": "https://deno.land/x/dotenv@v3.2.0/load.ts"
+  }
+}
