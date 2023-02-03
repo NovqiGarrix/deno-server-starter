@@ -12,4 +12,5 @@ export const hello = (ctx: OakContext<"/">) => {
         status: "OK",
         data: `Hello, ${queryParams.name || 'World'}!`
     }
+
 }
