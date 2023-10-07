@@ -7,3 +7,7 @@
 deno.lock
 
 .vscode
+
+privatekey.pem
+
+publickey.pem

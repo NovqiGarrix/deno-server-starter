@@ -1,20 +1,28 @@
+interface ErrorField {
+    field?: string;
+    message?: string;
+    error?: string;
+}
+
 interface IServiceExeptionContructorParams {
-    message: string;
     code: number;
-    cause?: unknown;
+    status: string;
+    errors: Array<ErrorField>;
 }
 
 export class ServiceException extends Error {
 
-    public message: string;
     public code: number;
+    public status: string;
+    public errors: Array<ErrorField>;
     public cause?: unknown;
 
     constructor(params: IServiceExeptionContructorParams) {
-        super(params.message, { cause: params.cause });
+        super("ServiceException", { cause: params.code });
 
-        this.message = params.message;
         this.code = params.code;
+        this.status = params.status;
+        this.errors = params.errors;
     }
 
-} 
+}

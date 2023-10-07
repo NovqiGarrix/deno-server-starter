@@ -1,13 +1,12 @@
 import "@dotenv";
+import "@utils/jwt.ts";
 
 import createServer from "@app";
 
-import db from "@utils/db.ts";
 import logger from "@utils/logger.ts";
+import env from "@config/env.ts";
 
 const abortController = new AbortController();
-
-const PORT = +(Deno.env.get("PORT") || 4000);
 
 const app = createServer();
 
@@ -26,19 +25,11 @@ globalThis.addEventListener("unload", () => {
     abortController.abort();
 });
 
-app.addEventListener("listen", async ({ hostname, port, serverType }) => {
-    try {
-        logger.info(`🔥 Connecting to Database 🚀`);
-        await db.connect();
-
-        logger.info(
-            `Listening on ${hostname}:${port} with ${serverType} SERVER`
-                .toUpperCase(),
-        );
-    } catch (error) {
-        logger.error(`An error occurred in main.ts: ${error.message}`);
-        Deno.exit(1);
-    }
+app.addEventListener("listen", ({ hostname, port, serverType }) => {
+    logger.info(
+        `Listening on ${hostname}:${port} with ${serverType} SERVER`
+            .toUpperCase(),
+    );
 });
 
-await app.listen({ port: PORT, signal: abortController.signal });
+await app.listen({ port: +env.PORT, signal: abortController.signal });

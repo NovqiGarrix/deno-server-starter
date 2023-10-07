@@ -8,6 +8,7 @@
     "@controllers/": "./src/controllers/",
     "@services/": "./src/services/",
     "@models/": "./src/models/",
+    "@config/": "./src/config/",
     "@zod/": "./src/zod/",
     "@utils/": "./src/utils/",
     "@testDeps": "./tests/deps.ts",

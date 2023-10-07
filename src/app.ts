@@ -3,18 +3,16 @@ import { Application, oakCors, Router } from "@deps";
 
 import V1 from "@routes/v1.ts";
 import logAndErrorHandler from "@middlewares/logAndErrorHandler.ts";
+import env from "@config/env.ts";
 
 export default function createServer() {
-    const ORIGINS = Deno.env.get("ORIGINS");
-    if (!ORIGINS) throw new Error("ORIGINS is missing in env variables!");
-
     const app = new Application();
     const router = new Router();
 
     app.use(oakCors({
         credentials: true,
         methods: "*",
-        origin: JSON.parse(ORIGINS),
+        origin: env.CLIENT_URL,
         preflightContinue: true,
     }));
 
