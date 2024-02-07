@@ -5,21 +5,17 @@ export {
     Response as OakResponse,
     Router,
     Status,
-} from "https://deno.land/x/oak@v11.1.0/mod.ts";
-export type { Middleware } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+} from "https://deno.land/x/oak@v13.1.0/mod.ts";
+export type { Middleware } from "https://deno.land/x/oak@v13.1.0/mod.ts";
 
 // Oak Helpers
-export { getQuery } from "https://deno.land/x/oak@v11.1.0/helpers.ts";
+export { getQuery } from "https://deno.land/x/oak@v13.1.0/helpers.ts";
 
 // Oak Router
 export type {
     RouteParams,
     RouterContext,
-} from "https://deno.land/x/oak@v11.1.0/router.ts";
-
-// Redis Client
-export { connect as connectRedis } from "https://deno.land/x/redis@v0.26.0/mod.ts";
-export type { Redis } from "https://deno.land/x/redis@v0.26.0/mod.ts";
+} from "https://deno.land/x/oak@v13.1.0/router.ts";
 
 // Logger
 export {
@@ -39,18 +35,20 @@ export { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 
 // Base64
 export {
-    decode as decodeBase64,
-    encode as encodeBase64,
-} from "https://deno.land/std@0.82.0/encoding/base64.ts";
+    decodeBase64,
+    encodeBase64
+} from "https://deno.land/std@0.214.0/encoding/base64.ts";
 
 // Dayjs
-export { default as dayjs } from "https://deno.land/x/deno_dayjs@v0.2.1/mod.ts";
+export { default as dayjs } from "https://deno.land/x/deno_dayjs@v0.5.0/mod.ts";
 
 // Colors
-export { red } from "https://deno.land/std@0.152.0/fmt/colors.ts";
+export { red, yellow, green } from "https://deno.land/std@0.214.0/fmt/colors.ts";
 
 // Zod
 export * from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 // JWT
 export * as jose from "https://deno.land/x/jose@v4.15.2/index.ts";
+
+export * from "https://raw.githubusercontent.com/NovqiGarrix/novo/main/mod.ts";

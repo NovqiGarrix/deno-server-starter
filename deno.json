@@ -1,20 +1,13 @@
 {
   "tasks": {
-    "dev": "deno run -A --watch main.ts",
     "test": "deno test -A",
+    "dev": "deno run -A --watch main.ts",
     "start": "deno run -A main.ts"
   },
   "importMap": "import_map.json",
   "fmt": {
     "options": {
       "indentWidth": 4
-    }
-  },
-  "lint": {
-    "files": {
-      "exclude": [
-        "k6"
-      ]
     }
   }
 }

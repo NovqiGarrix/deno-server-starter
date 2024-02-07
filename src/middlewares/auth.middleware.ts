@@ -1,6 +1,5 @@
-// deno-lint-ignore-file no-explicit-any
 import { Context, jose, Status } from "@deps";
-import { ServiceException } from "../exeptions/serviceExeption.ts";
+import { ServiceException } from "../exceptions/serviceException.ts";
 import jwt from "@utils/jwt.ts";
 
 export default async function authMiddleware(
@@ -15,15 +14,10 @@ export default async function authMiddleware(
 
     try {
         if (!token) {
-            throw new ServiceException({
-                code: Status.Unauthorized,
-                status: "Unauthorized",
-                errors: [
-                    {
-                        error: "Unauthorized",
-                    },
-                ],
-            });
+            throw new ServiceException()
+                .setCode(Status.Unauthorized)
+                .setStatus("Unauthorized")
+                .setCommonError("Unauthorized");
         }
 
         let payload: jose.JWTPayload | undefined = undefined;
@@ -31,51 +25,21 @@ export default async function authMiddleware(
         try {
             payload = await jwt.verify(token);
         } catch (_error) {
-            throw new ServiceException({
-                code: Status.Unauthorized,
-                status: "Unauthorized",
-                errors: [
-                    {
-                        error: "Unauthorized",
-                    },
-                ],
-            });
+            throw new ServiceException()
+                .setCode(Status.Unauthorized)
+                .setStatus("Unauthorized")
+                .setCommonError("Unauthorized");
         }
 
-        if (
-            payload.iss !== "novqi:srsku:movieku-video-api:issuer" &&
-            payload.aud !== "novqi:srsku:movieku-client"
-        ) {
-            throw new ServiceException({
-                code: Status.Unauthorized,
-                status: "Unauthorized",
-                errors: [
-                    {
-                        error: "Unauthorized Client",
-                    },
-                ],
-            });
-        }
+        ctx.state.user = payload;
 
         await next();
     } catch (error) {
         if (error instanceof ServiceException) {
-            ctx.response.status = error.code;
-            ctx.response.body = {
-                code: error.code,
-                status: error.status,
-                errors: error.errors,
-            };
-            return;
+            ctx.response = error.toResponse(ctx.response);
+            return
         }
 
-        ctx.response.status = Status.InternalServerError;
-        ctx.response.body = {
-            code: 500,
-            status: "InternalServerError",
-            errors: [{
-                error: "InternalServerError",
-            }],
-        };
+        ctx.response = ServiceException.internalServerError().toResponse(ctx.response);
     }
 }

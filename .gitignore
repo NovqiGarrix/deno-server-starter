@@ -4,10 +4,6 @@
 
 .vscode
 
-deno.lock
+*.pem
 
-.vscode
-
-privatekey.pem
-
-publickey.pem
+*.base64

@@ -1,23 +1,11 @@
-import { OakResponse, Status } from "@deps";
-import { ServiceException } from "../exeptions/serviceExeption.ts";
+import { OakResponse } from "@deps";
+import { ServiceException } from "@exceptions/serviceException.ts";
 
 export default function catchHandler(response: OakResponse, error: unknown) {
     if (error instanceof ServiceException) {
-        response.status = error.code;
-        response.body = {
-            code: error.code,
-            status: error.status,
-            errors: error.errors,
-        };
-        return;
+        response = error.toResponse(response);
+        return
     }
 
-    response.status = Status.InternalServerError;
-    response.body = {
-        code: 500,
-        status: "InternalServerError",
-        errors: [{
-            error: "InternalServerError",
-        }],
-    };
+    response = ServiceException.internalServerError().toResponse(response);
 }

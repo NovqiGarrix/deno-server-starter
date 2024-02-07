@@ -1,7 +1,6 @@
-// deno-lint-ignore-file no-explicit-any
-
-import { Context, red, Status } from "@deps";
+import { Context, red, isHttpError, yellow, green } from "@deps";
 import logger from "@utils/logger.ts";
+import { ServiceException } from "@exceptions/serviceException.ts";
 
 export default async function logAndErrorHandler(
   { request, response }: Context<Record<string, any>, Record<string, any>>,
@@ -15,41 +14,32 @@ export default async function logAndErrorHandler(
     }
 
     logger.info(
-      `[METHOD]: "${request.method}" [ENDPOINT]: "${request.originalRequest.url}"`,
+      `${yellow('REQUEST')} => [METHOD]: "${request.method}" [ENDPOINT]: "${request.url.pathname}"`,
     );
+
     await next();
 
     const endTime = Date.now();
     const time = endTime - startTime;
 
     logger.success(
-      `[TOOK]: ${time}ms [METHOD]: "${request.method}" [CODE]: "${response.status}" [ENDPOINT]: "${request.originalRequest.url.slice(0, 200)
-      }..."`,
+      `${green('REQUEST')} => [TOOK]: ${time}ms [METHOD]: "${request.method}" [CODE]: "${response.status}" [ENDPOINT]: "${request.url.pathname}"`,
     );
   } catch (error) {
-    logger.error(error.message);
-    response.status = error.status || error.code || Status.InternalServerError;
+    if (isHttpError(error)) {
+      response = ServiceException.internalServerError().toResponse(response);
+    } else if (error instanceof ServiceException) {
+      response = error.toResponse(response);
+    } else {
+      response = ServiceException.internalServerError().toResponse(response);
+    }
 
     const endTime = Date.now();
     const time = endTime - startTime;
     logger.info(
       red(
-        `[TOOK]: ${time}ms [METHOD]: "${request.method}" [STATUS]: "${response.status}" [ENDPOINT]: "${request.originalRequest.url.slice(0, 200)
-        }..."`,
+        `${green('REQUEST')} => [TOOK]: ${time}ms [METHOD]: "${request.method}" [STATUS]: "${response.status}" [ENDPOINT]: "${request.url.pathname}"`,
       ),
     );
-
-    if (response.status === 500) {
-      response.body = {
-        data: null,
-        error: "An error occurred while doing your request!",
-      };
-      return;
-    }
-
-    response.body = {
-      data: null,
-      error: error.message,
-    };
   }
 }

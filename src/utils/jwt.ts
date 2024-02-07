@@ -32,9 +32,14 @@ async function verify<T>(token: string): Promise<jose.JWTPayload & T> {
         const { payload } = await jose.jwtVerify(token, PUBLIC_KEY, {
             algorithms: [alg],
         });
+
+        if (
+            payload.iss !== "novqi:srsku:movieku-video-api:issuer" &&
+            payload.aud !== "novqi:srsku:movieku-client"
+        ) throw new Error("Unauthorized Client");
+
         return payload as jose.JWTPayload & T;
-    } catch (error) {
-        console.log(error);
+    } catch (_error) {
         throw new Error("Invalid token");
     }
 }
