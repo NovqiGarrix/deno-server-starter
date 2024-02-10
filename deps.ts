@@ -3,6 +3,7 @@ export {
     Context,
     isHttpError,
     Response as OakResponse,
+    Request as OakRequest,
     Router,
     Status,
 } from "https://deno.land/x/oak@v13.1.0/mod.ts";
@@ -43,7 +44,7 @@ export {
 export { default as dayjs } from "https://deno.land/x/deno_dayjs@v0.5.0/mod.ts";
 
 // Colors
-export { red, yellow, green } from "https://deno.land/std@0.214.0/fmt/colors.ts";
+export { red, yellow, green } from "https://deno.land/std@0.215.0/fmt/colors.ts";
 
 // Zod
 export * from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -51,4 +52,11 @@ export * from "https://deno.land/x/zod@v3.22.4/mod.ts";
 // JWT
 export * as jose from "https://deno.land/x/jose@v4.15.2/index.ts";
 
+// Novo (ORM)
 export * from "https://raw.githubusercontent.com/NovqiGarrix/novo/main/mod.ts";
+
+// Argon2
+export * as argon2 from "https://raw.githubusercontent.com/NovqiGarrix/deno-argon2/master/lib/mod.ts";
+
+// S3
+export * as s3 from 'npm:@aws-sdk/client-s3@3.511.0';

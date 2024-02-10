@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { Status, OakResponse } from "@deps";
 import type { FormError } from "@types";
 
@@ -5,26 +6,27 @@ interface ErrorField {
     field?: string;
     message?: string;
     error?: string;
+    source?: any;
 }
 
 export class ServiceException extends Error {
 
-    public code = Status.InternalServerError;
-    public status = "InternalServerError";
-    public errors: Array<ErrorField> = [{ error: "Something went wrong" }];
-    public cause?: unknown;
+    #code = Status.InternalServerError;
+    #status = "InternalServerError";
+    errors: Array<ErrorField> = [];
+    cause?: unknown;
 
     constructor() {
         super("ServiceException");
     }
 
     setCode(code: number): ServiceException {
-        this.code = code;
+        this.#code = code;
         return this
     }
 
     setStatus(status: string): ServiceException {
-        this.status = status;
+        this.#status = status;
         return this
     }
 
@@ -46,11 +48,11 @@ export class ServiceException extends Error {
     }
 
     public static internalServerError(): ServiceException {
-        return new ServiceException();
+        return new ServiceException().setErrors([{ error: "Something went wrong" }]);
     }
 
     toResponse(response: OakResponse): OakResponse {
-        response.status = this.code;
+        response.status = this.#code;
 
         const errorWithoutUndefined = this.errors.map((error) => {
             const newError: ErrorField = {};
@@ -61,12 +63,44 @@ export class ServiceException extends Error {
         });
 
         response.body = {
-            code: this.code,
-            status: this.status,
+            code: this.#code,
+            status: this.#status,
             errors: errorWithoutUndefined
         }
 
         return response;
+    }
+
+    private setErrors(errors: Array<ErrorField>): ServiceException {
+        this.errors = errors;
+        return this;
+    }
+
+    public static async fromHttpResponse(response: Response) {
+
+        const { error, errors } = await response.json();
+
+        return new ServiceException()
+            .setCode(response.status)
+            .setStatus(response.statusText)
+            .setErrors([
+                {
+                    error: error?.message || errors?.[0]?.message || "Something went wrong",
+                    source: {
+                        headers: Object.fromEntries(response.headers.entries()),
+                        url: response.url
+                    }
+                }
+            ])
+
+    }
+
+    stringify() {
+        return JSON.stringify({
+            code: this.#code,
+            status: this.#status,
+            errors: this.errors
+        });
     }
 
 }

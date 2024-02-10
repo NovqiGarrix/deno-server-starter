@@ -1,8 +1,11 @@
 import { Context, jose, Status } from "@deps";
-import { ServiceException } from "../exceptions/serviceException.ts";
+import { ServiceException } from "@exceptions/serviceException.ts";
+import { JwtPayload } from "@types";
+import catchHandler from "@utils/catchHandler.ts";
 import jwt from "@utils/jwt.ts";
 
 export default async function authMiddleware(
+    // deno-lint-ignore no-explicit-any
     ctx: Context<Record<string, any>, Record<string, any>>,
     next: () => Promise<unknown>,
 ) {
@@ -20,7 +23,7 @@ export default async function authMiddleware(
                 .setCommonError("Unauthorized");
         }
 
-        let payload: jose.JWTPayload | undefined = undefined;
+        let payload: (jose.JWTPayload & JwtPayload) | undefined = undefined;
 
         try {
             payload = await jwt.verify(token);
@@ -35,11 +38,6 @@ export default async function authMiddleware(
 
         await next();
     } catch (error) {
-        if (error instanceof ServiceException) {
-            ctx.response = error.toResponse(ctx.response);
-            return
-        }
-
-        ctx.response = ServiceException.internalServerError().toResponse(ctx.response);
+        catchHandler(ctx.response, error);
     }
 }

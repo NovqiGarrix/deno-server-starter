@@ -1,8 +1,8 @@
 {
   "tasks": {
-    "test": "deno test -A",
-    "dev": "deno run -A --watch main.ts",
-    "start": "deno run -A main.ts"
+    "test": "deno test -A --unstable-ffi",
+    "dev": "deno run --allow-env --allow-net --allow-read --allow-write --allow-ffi --allow-sys --unstable-ffi --watch main.ts",
+    "start": "deno run --allow-env --allow-net --allow-read --allow-write --allow-ffi --allow-sys --unstable-ffi main.ts"
   },
   "importMap": "import_map.json",
   "fmt": {

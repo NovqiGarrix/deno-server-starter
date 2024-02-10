@@ -22,3 +22,9 @@ export type NextFunction<T> = () => Promise<T>;
 export type MyError = Error | null;
 
 export type ServiceReturn<T> = [T, MyError, number];
+
+export interface JwtPayload {
+    role: string;
+    name: string;
+    photoUrl: string | null;
+}

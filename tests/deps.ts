@@ -7,17 +7,13 @@ export {
     assertObjectMatch as assertObject,
     equal,
     fail,
-} from "https://deno.land/std@0.170.0/testing/asserts.ts";
+    assertExists,
+    assertStringIncludes,
+    assertFalse,
+    assert
+} from "https://deno.land/std@0.215.0/assert/mod.ts";
 
 export { default as assertObjectMatch } from "./assertObjectMatch.ts";
 
 // Expect
 export { expect } from "https://deno.land/x/expect@v0.2.10/mod.ts";
-
-// BDD
-export {
-    afterAll,
-    beforeAll,
-    describe,
-    it,
-} from "https://deno.land/std@0.170.0/testing/bdd.ts";

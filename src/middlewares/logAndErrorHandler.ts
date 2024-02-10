@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { Context, red, isHttpError, yellow, green } from "@deps";
 import logger from "@utils/logger.ts";
 import { ServiceException } from "@exceptions/serviceException.ts";
@@ -23,7 +24,7 @@ export default async function logAndErrorHandler(
     const time = endTime - startTime;
 
     logger.success(
-      `${green('REQUEST')} => [TOOK]: ${time}ms [METHOD]: "${request.method}" [CODE]: "${response.status}" [ENDPOINT]: "${request.url.pathname}"`,
+      `${green('RESPONSE')} => [TOOK]: ${time}ms [METHOD]: "${request.method}" [CODE]: "${response.status}" [ENDPOINT]: "${request.url.pathname}"`,
     );
   } catch (error) {
     if (isHttpError(error)) {
